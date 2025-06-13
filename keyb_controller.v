@@ -7,6 +7,7 @@ module keyb_controller(
         output reg [3:0] btn_out      
 );
  
+    //variables internas
     reg first_col;
     reg btn_press_internal;
 
@@ -67,7 +68,7 @@ module keyb_controller(
                 btn_pressed <= 1;
             end
             else if (!btn_press_internal) begin
-                btn_out <= 8'd0;
+                btn_out <= 4'd0;
                 btn_pressed <= 0;
             end
         end
@@ -82,16 +83,16 @@ module encoder2_4(
         output reg [1:0] out
 );
     always@(*) begin
-        if(in[3] == 1) begin
+        if(in[3]) begin
             out <= 2'b11
         end
-        else if(in[2] == 1) begin
+        else if(in[2]) begin
             out <= 2'b10
         end
-        else if(in[1] == 1) begin
+        else if(in[1]) begin
             out <= 2'b01
         end
-        else if(in[0] == 1) begin
+        else if(in[0]) begin
             out <= 2'b00
         end
     end
