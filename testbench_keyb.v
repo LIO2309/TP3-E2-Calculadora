@@ -49,18 +49,11 @@ module testbench_keyb();
     $dumpvars(2);
     #7 reset = 0;
     
+    #500 press_btn0 <= 0;
     #100 press_btn0 <= 1;
     #500 press_btn0 <= 0;
-    #300 press_btn1 <= 1;
-    #400 press_btn1 <= 0;
-    #300 press_btn_clr <= 1;
-    #20 press_btn_clr <= 0;
-    #50 press_btn_clr <= 1;
-    #40 press_btn_clr <= 0;
-    #600 press_btn8 <= 1;
-    #300 press_btn8 <= 0;
-    #400 press_btn6 <= 1;
-    #200 press_btn6 <= 0;
+    #100 press_btn0 <= 1;
+    #6000000 press_btn0 <= 0;
 
     #200 $finish;
   end

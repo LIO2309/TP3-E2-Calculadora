@@ -24,43 +24,63 @@
 //_______________________________________________________________________________________|
 
 module fsm_operand (clk, is_num, is_eq, is_op, clear);
-    input wire clk, reset, in;   // Clock, reset, sensor inputs (async)
-    output reg out;              // Control output
-    //output [2:1] y;            // State output (para debug)
+    input wire clk, is_num, is_eq, is_op, clear;   
+    output reg is_op1, is_op2, is_res, save, reset;              
 
-    reg [1:0] curr_state, next_state;
+    reg [3:0] curr_state, next_state;
 
     // Asignacion de estados
-    
-    parameter [1:0] E1 = 2'b00;
-    parameter [1:0] E2 = 2'b01;
-    parameter [1:0] E3 = 2'b10;
+    parameter [3:0] RST = 4'b0111;
+    parameter [3:0] COLOCANDO_OP1 = 4'b0010;
+    parameter [3:0] ESPERANDO_OP2 = 4'b0011;
+    parameter [3:0] COLOCANDO_OP2 = 4'b0100;
+    parameter [3:0] GUARDA = 4'b0110;
+    parameter [3:0] RESULTADO = 4'b0101;
+    parameter [3:0] ESPERANDO = 4'b1000;
 
     // Logica de proximo estado (combinacional)
     // Recordar SIEMPRE definir el proximo estado para TODAS las 
     // combinaciones posibles de Entradas y Estado Actual
     // Recomendacion: usar if/else de tal manera que el else capture
     // todas las combinaciones que no son explicitas    
-    always @(in, curr_state)
+    always @(is_num, is_eq, is_op, clear, curr_state)
         case (curr_state)
-            E1: begin 
-                    if (in == 1) begin
-                        next_state <= E2;
-                    end   
-                    else begin 
-                        next_state <= E1;
-                    end
+            RST: begin 
+                    //no condicional
+                    next_state <= COLOCANDO_OP1;
                 end
-            E2: begin 
-                    if (in == 1) next_state <= E2;
-                    else next_state <= E3;
+            COLOCANDO_OP1: begin 
+                    if (clear == 1 || is_num == 1) next_state <= COLOCANDO_OP1;
+                    else if (is_op ==1) next_state <= ESPERANDO_OP2;
+                    else next_state <= COLOCANDO_OP1;
                 end
-            E3: begin
-                    if (in == 1) next_state <= E3;
-                    else next_state <= E1;
+            ESPERANDO_OP2: begin
+                    if (is_num == 1) next_state <= COLOCANDO_OP2;
+                    else if(clear == 1) next_state <= RST;
+                    else next_state <= ESPERANDO_OP2;
                 end
+            COLOCANDO_OP2: begin
+                    if (is_eq == 1) next_state <= RESULTADO;
+                    else if (clear == 1) next_state <= ESPERANDO_OP2;
+                    else if (is_num == 1) next_state <= COLOCANDO_OP2;
+                    else next_state <= COLOCANDO_OP2;
+                end
+            GUARDA: begin
+                    //no condicional
+                    next_state <= ESPERANDO_OP2;
+                end
+            RESULTADO: begin
+                    //no condicional
+                    next_state <= ESPERANDO;
+                end
+            ESPERANDO: begin
+                    if (clear == 1) next_state <= RST;
+                    else if (is_op == 1) next_state <= GUARDA;
+                    else if (is_num == 1) next_state <= COLOCANDO_OP1;
+                    else next_state <= ESPERANDO;
+                end                
             default: begin
-                    next_state <= E1;
+                    next_state <= RST;
                 end
         endcase
 
@@ -75,17 +95,70 @@ module fsm_operand (clk, is_num, is_eq, is_op, clear);
     // Recordar siempre asignar TODAS las salidas para TODOS los estados
 	always @(curr_state)
 		begin
-			if (curr_state == E1)
+			if (curr_state == RST)
 				begin
-                    out <= 1;
+                    RST <= 1;
+                    is_op1 <= 0;
+                    is_op2 <= 0;
+                    is_res <= 0;
+                    save <= 0;
 				end
-			else if (curr_state == E2)	
+			else if (curr_state == COLOCANDO_OP1)	
 				begin
-					out <= 0
+					RST <= 0;
+                    is_op1 <= 1;
+                    is_op2 <= 1;
+                    is_res <= 0;
+                    save <= 0;
+				end
+            else if (curr_state == ESPERANDO_OP2)	
+				begin
+					RST <= 0;
+                    is_op1 <= 0;
+                    is_op2 <= 1;
+                    is_res <= 0;
+                    save <= 0; 
+				end
+            else if (curr_state == COLOCANDO_OP2)	
+				begin
+					RST <= 0;
+                    is_op1 <= 0;
+                    is_op2 <= 1;
+                    is_res <= 0;
+                    save <= 0;
+				end
+            else if (curr_state == GUARDA)	
+				begin
+					RST <= 0;
+                    is_op1 <= 0;
+                    is_op2 <= 0;
+                    is_res <= 0;
+                    save <= 1;
+                end
+            else if (curr_state == RESULTADO)	
+				begin
+					RST <= 0;
+                    is_op1 <= 0;
+                    is_op2 <= 0;
+                    is_res <= 1;
+                    save <= 0;
+				end
+            else if (curr_state == ESPERANDO)	
+				begin
+					RST <= 0;
+                    is_op1 <= 1;
+                    is_op2 <= 0;
+                    is_res <= 1;
+                    save <= 0;
 				end
 			else	 
+            // Pone las salidas como en RST
 				begin
-					out <= 0;   
+                    RST <= 1;
+                    is_op1 <= 0;
+                    is_op2 <= 0;
+                    is_res <= 0;
+                    save <= 0;
 				end
 		end
 endmodule
