@@ -97,7 +97,7 @@ module fsm_operand (clk, is_num, is_eq, is_op, clear);
 		begin
 			if (curr_state == RST)
 				begin
-                    RST <= 1;
+                    reset <= 1;
                     is_op1 <= 0;
                     is_op2 <= 0;
                     is_res <= 0;
@@ -105,7 +105,7 @@ module fsm_operand (clk, is_num, is_eq, is_op, clear);
 				end
 			else if (curr_state == COLOCANDO_OP1)	
 				begin
-					RST <= 0;
+					reset <= 0;
                     is_op1 <= 1;
                     is_op2 <= 1;
                     is_res <= 0;
@@ -113,7 +113,7 @@ module fsm_operand (clk, is_num, is_eq, is_op, clear);
 				end
             else if (curr_state == ESPERANDO_OP2)	
 				begin
-					RST <= 0;
+					reset <= 0;
                     is_op1 <= 0;
                     is_op2 <= 1;
                     is_res <= 0;
@@ -121,7 +121,7 @@ module fsm_operand (clk, is_num, is_eq, is_op, clear);
 				end
             else if (curr_state == COLOCANDO_OP2)	
 				begin
-					RST <= 0;
+					reset <= 0;
                     is_op1 <= 0;
                     is_op2 <= 1;
                     is_res <= 0;
@@ -129,7 +129,7 @@ module fsm_operand (clk, is_num, is_eq, is_op, clear);
 				end
             else if (curr_state == GUARDA)	
 				begin
-					RST <= 0;
+					reset <= 0;
                     is_op1 <= 0;
                     is_op2 <= 0;
                     is_res <= 0;
@@ -137,7 +137,7 @@ module fsm_operand (clk, is_num, is_eq, is_op, clear);
                 end
             else if (curr_state == RESULTADO)	
 				begin
-					RST <= 0;
+					reset <= 0;
                     is_op1 <= 0;
                     is_op2 <= 0;
                     is_res <= 1;
@@ -145,7 +145,7 @@ module fsm_operand (clk, is_num, is_eq, is_op, clear);
 				end
             else if (curr_state == ESPERANDO)	
 				begin
-					RST <= 0;
+					reset <= 0;
                     is_op1 <= 1;
                     is_op2 <= 0;
                     is_res <= 1;
@@ -154,7 +154,7 @@ module fsm_operand (clk, is_num, is_eq, is_op, clear);
 			else	 
             // Pone las salidas como en RST
 				begin
-                    RST <= 1;
+                    reset <= 1;
                     is_op1 <= 0;
                     is_op2 <= 0;
                     is_res <= 0;

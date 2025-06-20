@@ -1,0 +1,89 @@
+`timescale 1ns / 1ps
+
+module fsm_operand_tb;
+
+    // Entradas
+    reg clk;
+    reg is_num;
+    reg is_eq;
+    reg is_op;
+    reg clear;
+
+    // Salidas
+    wire is_op1;
+    wire is_op2;
+    wire is_res;
+    wire save;
+    wire reset;
+
+    // Instancia del módulo bajo prueba (UUT)
+    fsm_operand uut (
+        .clk(clk),
+        .is_num(is_num),
+        .is_eq(is_eq),
+        .is_op(is_op),
+        .clear(clear),
+        .is_op1(is_op1),
+        .is_op2(is_op2),
+        .is_res(is_res),
+        .save(save),
+        .reset(reset)
+    );
+
+    // Generador de clock (10 ns de período)
+    initial clk = 0;
+    always #5 clk = ~clk;
+
+    // Proceso de estimulación
+    initial begin
+        // Archivo de salida para ver en GTKWave si querés
+        $dumpfile("fsm_operand_tb.vcd");
+        $dumpvars(0, fsm_operand_tb);
+
+        // Mensaje de encabezado
+        $display("Tiempo | is_num is_eq is_op clear || is_op1 is_op2 is_res save reset");
+        $monitor("%4t    |   %b     %b     %b     %b   ||   %b      %b      %b     %b     %b",
+                 $time, is_num, is_eq, is_op, clear,
+                 is_op1, is_op2, is_res, save, reset);
+
+        // Inicialización
+        is_num = 0; is_eq = 0; is_op = 0; clear = 0;
+        #20;
+
+        // Ingresar primer número → COLOCANDO_OP1
+        is_num = 1; #10;
+        is_num = 0; #10;
+
+        // Ingresar operador → ESPERANDO_OP2
+        is_op = 1; #10;
+        is_op = 0; #10;
+
+        // Ingresar segundo número → COLOCANDO_OP2
+        is_num = 1; #10;
+        is_num = 0; #10;
+
+        // Ingresar '=' → RESULTADO
+        is_eq = 1; #10;
+        is_eq = 0; #10;
+
+        // Ingresar nuevo operador → GUARDA
+        is_op = 1; #10;
+        is_op = 0; #10;
+
+        // Ingresar nuevo número → COLOCANDO_OP2
+        is_num = 1; #10;
+        is_num = 0; #10;
+
+        // Borrar una vez → ESPERANDO_OP2
+        clear = 1; #10;
+        clear = 0; #10;
+
+        // Borrar de nuevo → RESET
+        clear = 1; #10;
+        clear = 0; #20;
+
+        // Fin de simulación
+        $finish;
+    end
+
+endmodule
