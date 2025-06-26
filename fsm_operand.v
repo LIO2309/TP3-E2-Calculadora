@@ -29,7 +29,7 @@ module fsm_operand (clk, is_num, is_eq, is_op, clear);
 
     reg [3:0] curr_state, next_state;
 
-    // Asignacion de estados
+    //Asignacion de estados
     parameter [3:0] RST = 4'b0111;
     parameter [3:0] COLOCANDO_OP1 = 4'b0010;
     parameter [3:0] ESPERANDO_OP2 = 4'b0011;

@@ -118,7 +118,7 @@ module encoder2_4(
 );
     always@(*) begin
         if(in[3]) begin
-            out <= 2'b11                //Si el bit 3 está activo
+            out <= 2'b11;                //Si el bit 3 está activo
         end
         else if(in[2]) begin
             out <= 2'b10                //Si el bit 2 está activo
