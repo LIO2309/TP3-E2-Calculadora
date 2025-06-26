@@ -21,7 +21,8 @@ module mux_and_bcd_converter (
         .num_BCD(raw_bcd_result)
     );
 
-    assign result_bcd = raw_bcd_result;
+    assign result_bcd = (is_res) ? raw_bcd_result : 16'b0;
+
 
     wire [15:0] muxed_bcd_out;
     assign muxed_bcd_out = (is_res) ? raw_bcd_result : 16'b0;
