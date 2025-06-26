@@ -121,13 +121,13 @@ module encoder2_4(
             out <= 2'b11;                //Si el bit 3 está activo
         end
         else if(in[2]) begin
-            out <= 2'b10                //Si el bit 2 está activo
+            out <= 2'b10;                //Si el bit 2 está activo
         end
         else if(in[1]) begin
-            out <= 2'b01                //Si el bit 1 está activo
+            out <= 2'b01;                //Si el bit 1 está activo
         end
         else if(in[0]) begin
-            out <= 2'b00                //Si el bit 0 está activo
+            out <= 2'b00;                //Si el bit 0 está activo
         end
     end
 
