@@ -21,7 +21,7 @@ module keyb_antibounce (
 );
 
     // Parámetros
-    parameter integer FREQ_HZ = 50000000;  // 50 MHz
+    parameter integer FREQ_HZ = 12000000;  // 12 MHz
     parameter integer DELAY_MS = 1;         // 1 ms de delay
     parameter integer CLK_COUNT = (FREQ_HZ / 1000) * DELAY_MS; // ciclos para 1 ms delay
 
